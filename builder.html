@@ -646,20 +646,50 @@
 
   // ── PDF Download ──
   function downloadPDF() {
-    const name = val('f-name') || 'Resume';
-    const btn = document.querySelector('.btn-download');
-    btn.textContent = '⏳...'; btn.disabled = true;
+  const name = val('f-name') || 'Resume';
+  const btn = document.querySelector('.btn-download');
+  btn.textContent = '⏳...'; btn.disabled = true;
+
+  const wrapper = document.getElementById('resume-wrapper');
+
+  // Save current mobile transform
+  const savedTransform = wrapper.style.transform;
+  const savedMargin = wrapper.style.marginBottom;
+  const savedOrigin = wrapper.style.transformOrigin;
+
+  // Reset to full A4 size for PDF capture
+  wrapper.style.transform = 'none';
+  wrapper.style.marginBottom = '';
+  wrapper.style.transformOrigin = '';
+  wrapper.style.width = '210mm';
+
+  // Small delay so browser repaints before capture
+  setTimeout(() => {
     html2pdf().set({
       margin: 0,
-      filename: name.replace(/\s+/g,'_') + '_Resume.pdf',
+      filename: name.replace(/\s+/g, '_') + '_Resume.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, scrollY: 0, useCORS: true },
+      html2canvas: {
+        scale: 2,
+        scrollY: 0,
+        useCORS: true,
+        width: wrapper.scrollWidth,
+        windowWidth: wrapper.scrollWidth
+      },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).from(document.getElementById('resume-wrapper')).save().then(() => {
-      btn.textContent = '⬇ PDF'; btn.disabled = false;
+    })
+    .from(wrapper)
+    .save()
+    .then(() => {
+      // Restore mobile scale
+      wrapper.style.transform = savedTransform;
+      wrapper.style.marginBottom = savedMargin;
+      wrapper.style.transformOrigin = savedOrigin;
+      btn.textContent = '⬇ PDF';
+      btn.disabled = false;
     });
-  }
-
+  }, 100);
+}
   // ── Init ──
   document.addEventListener('DOMContentLoaded', () => {
     const tpl = localStorage.getItem('selectedTemplate') || 'classic';
