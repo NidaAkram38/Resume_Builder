@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0d0f14" />
   <title>Dashboard — Lynxperio</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -14,230 +15,255 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
 
+    /* NAV */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 6%; background: var(--ink);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: var(--ink); padding: 14px 6%;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--paper); text-decoration: none; }
-    .logo span { color: var(--accent); }
-    .nav-right { display: flex; align-items: center; gap: 14px; }
-    .nav-username { font-size: 13px; color: rgba(255,255,255,0.5); }
-    .btn-logout {
-      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
-      padding: 8px 16px; border-radius: 6px;
-      font-size: 13px; font-weight: 500;
-      border: 1px solid rgba(255,255,255,0.12);
-      text-decoration: none; transition: background 0.2s;
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: white; text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-user { font-size: 13px; color: rgba(255,255,255,0.55); }
+    .nav-logout {
+      background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.15);
+      padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: background 0.2s; font-family: 'DM Sans', sans-serif;
     }
-    .btn-logout:hover { background: rgba(255,255,255,0.14); }
+    .nav-logout:hover { background: rgba(255,255,255,0.18); }
 
-    .page {
-      max-width: 960px; margin: 0 auto; padding: 48px 24px;
-    }
+    /* PAGE */
+    .page { max-width: 1100px; margin: 0 auto; padding: 40px 6%; }
 
-    .page-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
-    }
-    .page-header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 32px; letter-spacing: -0.3px;
-    }
-    .page-header p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; gap: 16px; flex-wrap: wrap; }
+    .page-header h1 { font-family: 'DM Serif Display', serif; font-size: 32px; }
+    .page-header p { color: var(--muted); font-size: 14px; margin-top: 4px; }
 
     .btn-primary {
-      background: var(--ink); color: var(--paper);
-      padding: 12px 24px; border-radius: 8px;
-      font-size: 14px; font-weight: 600; text-decoration: none;
-      border: none; cursor: pointer; transition: background 0.2s, transform 0.15s;
-      display: inline-block;
+      background: var(--accent); color: white; padding: 11px 22px; border-radius: 8px;
+      font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+      transition: background 0.2s; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+      text-decoration: none; display: inline-block;
     }
-    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-primary:hover { background: #b84616; }
 
-    /* Quick actions */
-    .quick-actions {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px; margin-bottom: 40px;
-    }
+    /* QUICK ACTIONS */
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 14px; }
+    .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 40px; }
+
     .action-card {
-      background: white; border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 24px 20px;
-      text-decoration: none; color: var(--ink);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      background: var(--paper); border: 1px solid var(--border); border-radius: 14px;
+      padding: 22px 20px; cursor: pointer; text-decoration: none; color: var(--ink);
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      display: flex; flex-direction: column; gap: 8px;
     }
-    .action-card:hover { border-color: var(--accent); box-shadow: 0 8px 24px rgba(200,82,26,0.1); transform: translateY(-3px); }
-    .action-icon { font-size: 24px; margin-bottom: 12px; }
-    .action-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-    .action-card p { font-size: 12px; color: var(--muted); }
+    .action-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.07); transform: translateY(-3px); border-color: var(--accent); }
+    .action-icon { font-size: 22px; }
+    .action-card h3 { font-size: 14px; font-weight: 700; }
+    .action-card p { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
-    /* Resume list */
-    .section-title {
-      font-size: 14px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1px; color: var(--muted); margin-bottom: 16px;
-    }
-
-    .resumes-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-    }
+    /* RESUMES GRID */
+    .resumes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
 
     .resume-card {
-      background: white; border: 1.5px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      transition: box-shadow 0.2s, border-color 0.2s;
+      background: var(--paper); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; transition: box-shadow 0.2s, transform 0.2s;
     }
-    .resume-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); border-color: #ccc; }
+    .resume-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.07); transform: translateY(-2px); }
 
     .resume-thumb {
-      height: 130px; background: var(--cream);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 40px; color: var(--border);
-      border-bottom: 1px solid var(--border);
+      height: 140px; background: linear-gradient(135deg, var(--ink) 0%, #2a2d36 100%);
+      display: flex; align-items: center; justify-content: center; position: relative;
     }
+    .resume-thumb-inner { background: white; width: 75px; height: 96px; border-radius: 4px; padding: 8px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+    .rt-line { height: 4px; background: var(--border); border-radius: 2px; }
+    .rt-line.dark { background: var(--ink); }
+    .rt-line.accent { background: var(--accent); }
+    .rt-line.f { width: 100%; } .rt-line.e { width: 80%; } .rt-line.s { width: 55%; }
 
-    .resume-info { padding: 16px; }
+    .resume-info { padding: 16px 18px; }
     .resume-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .resume-meta { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
-
+    .resume-meta { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
     .resume-actions { display: flex; gap: 8px; }
-    .ra-btn {
-      flex: 1; padding: 8px;
-      border-radius: 6px; font-size: 12px; font-weight: 600;
-      border: 1.5px solid var(--border); background: none; cursor: pointer;
-      color: var(--ink); transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    .res-btn {
+      flex: 1; padding: 8px 6px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; border: 1px solid var(--border);
+      background: transparent; color: var(--ink); font-family: 'DM Sans', sans-serif; text-align: center;
     }
-    .ra-btn:hover { border-color: var(--ink); background: var(--cream); }
-    .ra-btn.danger { color: #dc2626; }
-    .ra-btn.danger:hover { border-color: #dc2626; background: #fef2f2; }
+    .res-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
+    .res-btn.danger:hover { background: #dc2626; border-color: #dc2626; }
 
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center; padding: 60px 20px;
-      background: white; border: 1.5px dashed var(--border);
-      border-radius: 12px;
+    /* Empty state */
+    .empty-state { text-align: center; padding: 60px 20px; background: var(--paper); border: 2px dashed var(--border); border-radius: 16px; }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 8px; }
+    .empty-state p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+    /* Loading spinner */
+    .loading { display: flex; justify-content: center; padding: 40px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 12px 5%; }
+      .nav-user { display: none; }
+      .page { padding: 28px 5% 48px; }
+      .page-header h1 { font-size: 26px; }
+      .page-header { margin-bottom: 24px; }
+      .btn-primary { width: 100%; text-align: center; padding: 12px; }
+      .quick-actions { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+      .action-card { padding: 16px 14px; }
+      .action-icon { font-size: 18px; }
+      .action-card h3 { font-size: 13px; }
+      .action-card p { font-size: 11px; }
+      .resumes-grid { grid-template-columns: 1fr; }
+      .resume-thumb { height: 120px; }
     }
-    .empty-state .empty-icon { font-size: 40px; margin-bottom: 16px; }
-    .empty-state h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-    .empty-state p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+    @media (max-width: 420px) {
+      .quick-actions { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; align-items: flex-start; }
+      .btn-primary { width: 100%; }
+    }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="logo">Lynx<span>perio</span></a>
+  <a href="index.html" class="nav-logo">Lynx<span>perio</span></a>
   <div class="nav-right">
-    <span class="nav-username" id="nav-username">Loading...</span>
-    <a href="../backend/logout.php" class="btn-logout">Sign Out</a>
+    <span class="nav-user" id="navUser">Loading…</span>
+    <a href="../backend/logout.php" class="nav-logout">Sign Out</a>
   </div>
 </nav>
 
 <div class="page">
+
   <div class="page-header">
     <div>
-      <h1 id="welcome-text">Welcome back</h1>
-      <p>Manage your resumes or create a new one.</p>
+      <h1>My Resumes</h1>
+      <p>Build, edit, and download your resumes</p>
     </div>
-    <a href="builder.html" class="btn-primary">+ Create New Resume</a>
+    <a href="builder.html" class="btn-primary">+ New Resume</a>
   </div>
 
-  <!-- Quick Actions -->
+  <!-- QUICK ACTIONS -->
+  <div class="section-title">Quick Actions</div>
   <div class="quick-actions">
     <a href="builder.html" class="action-card">
       <div class="action-icon">✏️</div>
       <h3>New Resume</h3>
-      <p>Start building from scratch</p>
+      <p>Start building with a fresh template</p>
     </a>
     <a href="templates.html" class="action-card">
       <div class="action-icon">🎨</div>
       <h3>Browse Templates</h3>
-      <p>5 ATS-friendly designs</p>
+      <p>Pick a style that fits your career</p>
     </a>
     <a href="builder.html" class="action-card">
-      <div class="action-icon">⬇</div>
+      <div class="action-icon">⬇️</div>
       <h3>Download PDF</h3>
-      <p>Export your latest resume</p>
+      <p>Export your latest resume as PDF</p>
     </a>
   </div>
 
-  <!-- My Resumes -->
-  <div class="section-title">My Resumes</div>
-  <div class="resumes-grid" id="resumeGrid">
-    <div class="empty-state">
-      <div class="empty-icon">📄</div>
-      <h3>No resumes yet</h3>
-      <p>Create your first resume and it'll appear here.</p>
-      <a href="builder.html" class="btn-primary">Create Resume →</a>
-    </div>
+  <!-- RESUMES -->
+  <div class="section-title">Saved Resumes</div>
+  <div id="resumesContainer">
+    <div class="loading"><div class="spinner"></div></div>
   </div>
+
 </div>
 
 <script>
   // Load user info
-  async function loadDashboard() {
-    try {
-      const res = await fetch('../backend/get_resumes.php');
-      const data = await res.json();
-      if (!data.success) { window.location.href = 'login.html'; return; }
-
-      const name = data.user?.name || 'there';
-      document.getElementById('welcome-text').textContent = `Welcome back, ${name}`;
-      document.getElementById('nav-username').textContent = name;
-
-      if (data.resumes && data.resumes.length > 0) {
-        renderResumes(data.resumes);
+  fetch('../backend/get_resumes.php')
+    .then(r => r.json())
+    .then(data => {
+      if (data.user) {
+        document.getElementById('navUser').textContent = '👤 ' + data.user.name;
       }
-    } catch(e) {
-      // Offline mode — show dashboard without data
-      document.getElementById('nav-username').textContent = 'Guest';
-    }
-  }
+      renderResumes(data.resumes || []);
+    })
+    .catch(() => {
+      // Not logged in or backend unavailable — show empty state
+      document.getElementById('navUser').textContent = 'Guest';
+      renderResumes([]);
+    });
 
   function renderResumes(resumes) {
-    const grid = document.getElementById('resumeGrid');
-    grid.innerHTML = resumes.map(r => `
-      <div class="resume-card" id="card-${r.id}">
-        <div class="resume-thumb">📄</div>
-        <div class="resume-info">
-          <div class="resume-name">${escHtml(r.name || 'Untitled Resume')}</div>
-          <div class="resume-meta">Updated ${formatDate(r.updated_at)}</div>
-          <div class="resume-actions">
-            <button class="ra-btn" onclick="editResume(${r.id})">Edit</button>
-            <button class="ra-btn" onclick="downloadResume(${r.id})">PDF</button>
-            <button class="ra-btn danger" onclick="deleteResume(${r.id})">Delete</button>
+    const container = document.getElementById('resumesContainer');
+    if (!resumes.length) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📄</div>
+          <h3>No resumes yet</h3>
+          <p>Create your first resume to get started — it only takes a few minutes.</p>
+          <a href="builder.html" class="btn-primary">Build My First Resume →</a>
+        </div>`;
+      return;
+    }
+    container.innerHTML = `<div class="resumes-grid">${resumes.map(r => resumeCard(r)).join('')}</div>`;
+  }
+
+  function resumeCard(r) {
+    const date = new Date(r.updated_at || r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return `
+      <div class="resume-card">
+        <div class="resume-thumb">
+          <div class="resume-thumb-inner">
+            <div class="rt-line dark f"></div><div class="rt-line dark e"></div>
+            <div style="height:2px;background:#e4e0d8;margin:2px 0"></div>
+            <div class="rt-line f"></div><div class="rt-line e"></div><div class="rt-line s"></div>
+            <div class="rt-line f"></div><div class="rt-line e"></div>
           </div>
         </div>
-      </div>
-    `).join('');
+        <div class="resume-info">
+          <div class="resume-name">${escHtml(r.title || 'Untitled Resume')}</div>
+          <div class="resume-meta">Updated ${date} · ${escHtml(r.template || 'Classic')}</div>
+          <div class="resume-actions">
+            <button class="res-btn" onclick="editResume(${r.id})">✏️ Edit</button>
+            <button class="res-btn" onclick="downloadResume(${r.id})">⬇ PDF</button>
+            <button class="res-btn danger" onclick="deleteResume(${r.id}, this)">🗑</button>
+          </div>
+        </div>
+      </div>`;
   }
 
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  function formatDate(d) {
-    if (!d) return 'recently';
-    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function editResume(id) { window.location.href = `builder.html?id=${id}`; }
-  function downloadResume(id) { window.open(`../backend/download_pdf.php?id=${id}`, '_blank'); }
 
-  async function deleteResume(id) {
-    if (!confirm('Delete this resume? This cannot be undone.')) return;
-    try {
-      const res = await fetch('../backend/delete_resume.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ id })
-      });
-      const data = await res.json();
-      if (data.success) document.getElementById('card-' + id)?.remove();
-    } catch {}
+  function downloadResume(id) {
+    window.open(`../backend/download_pdf.php?id=${id}`, '_blank');
   }
 
-  loadDashboard();
+  function deleteResume(id, btn) {
+    if (!confirm('Delete this resume? This cannot be undone.')) return;
+    btn.textContent = '…'; btn.disabled = true;
+    fetch('../backend/delete_resume.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        btn.closest('.resume-card').remove();
+        // If no more cards, show empty state
+        if (!document.querySelector('.resume-card')) {
+          renderResumes([]);
+        }
+      } else {
+        alert('Could not delete resume. Please try again.');
+        btn.textContent = '🗑'; btn.disabled = false;
+      }
+    })
+    .catch(() => {
+      alert('Connection error.');
+      btn.textContent = '🗑'; btn.disabled = false;
+    });
+  }
 </script>
 </body>
 </html>
