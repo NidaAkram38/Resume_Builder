@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0d0f14" />
   <title>Templates — Lynxperio Resume Builder</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -14,6 +15,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); }
 
+    /* NAV */
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
@@ -22,162 +24,130 @@
     }
     .logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); text-decoration: none; }
     .logo span { color: var(--accent); }
-    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links { display: flex; align-items: center; gap: 26px; list-style: none; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
     .nav-links a:hover { color: var(--ink); }
-    .btn-primary {
-      background: var(--ink); color: var(--paper);
-      padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600;
-      text-decoration: none; border: none; cursor: pointer; transition: background 0.2s;
-      display: inline-block;
-    }
+    .btn-primary { background: var(--ink); color: var(--paper); padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-block; transition: background 0.2s; }
     .btn-primary:hover { background: var(--accent); }
-    .hamburger { display: none; font-size: 22px; cursor: pointer; background: none; border: none; color: var(--ink); }
+    .hamburger { display: none; background: none; border: none; color: var(--ink); font-size: 24px; cursor: pointer; padding: 4px; z-index: 1100; }
 
-    /* HERO */
-    .page-hero {
-      padding: 72px 6% 56px;
-      text-align: center;
-      background: var(--cream);
-      border-bottom: 1px solid var(--border);
-    }
-    .page-hero .eyebrow {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--accent-light); color: var(--accent);
-      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-      padding: 5px 12px; border-radius: 20px; margin-bottom: 18px;
-    }
-    .page-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(32px,4vw,50px); letter-spacing: -0.5px; margin-bottom: 12px; }
+    /* Mobile overlay */
+    .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(250,249,246,0.98); z-index: 1050; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+    .nav-overlay.open { display: flex; }
+    .nav-overlay a { font-size: 20px; font-weight: 600; color: var(--ink); text-decoration: none; }
+    .nav-overlay a:hover { color: var(--accent); }
+    .nav-close { position: absolute; top: 20px; right: 24px; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--ink); }
+
+    /* PAGE HERO */
+    .page-hero { padding: 64px 6% 48px; text-align: center; background: var(--cream); border-bottom: 1px solid var(--border); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 6px; background: var(--accent-light); color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 16px; }
+    .page-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 50px); letter-spacing: -0.5px; margin-bottom: 12px; }
     .page-hero p { color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
 
     /* GRID */
-    .templates-wrapper { max-width: 1200px; margin: 0 auto; padding: 64px 6%; }
+    .templates-wrapper { max-width: 1200px; margin: 0 auto; padding: 56px 6%; }
+    .templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 28px; }
 
-    .templates-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 32px;
-    }
+    .template-card { background: white; border: 2px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative; }
+    .template-card:hover { border-color: var(--accent); box-shadow: 0 16px 40px rgba(200,82,26,0.12); transform: translateY(-6px); }
+    .template-badge { position: absolute; top: 12px; right: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }
+    .badge-ats { background: #166534; color: white; }
 
-    .template-card {
-      background: white;
-      border: 2px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-      position: relative;
-    }
-    .template-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 16px 40px rgba(200,82,26,0.12);
-      transform: translateY(-6px);
-    }
+    /* Template preview thumbs */
+    .tpl-preview { height: 200px; overflow: hidden; }
 
-    .template-badge {
-      position: absolute; top: 12px; right: 12px;
-      background: var(--ink); color: var(--paper);
-      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 20px;
-    }
-    .template-badge.ats { background: #166534; }
+    .tpl-classic { background: #fff; padding: 18px; height: 100%; border-bottom: 3px solid #000; }
+    .tc-name { font-weight: 800; font-size: 16px; color: #000; text-align: center; margin-bottom: 2px; }
+    .tc-title { font-size: 10px; color: #555; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+    .tc-div { border-top: 1.5px solid #000; margin: 10px 0 8px; }
+    .tc-sh { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 7px; }
+    .tc-ln { height: 6px; background: #e5e5e5; border-radius: 3px; margin-bottom: 5px; }
+    .tc-ln.f{width:100%;} .tc-ln.e{width:80%;} .tc-ln.s{width:58%;}
 
-    /* Template Previews */
-    .tpl-preview { height: 220px; position: relative; overflow: hidden; }
+    .tpl-executive { background: #fff; padding: 18px; height: 100%; border-left: 5px solid #1a3c8f; }
+    .te-name { font-size: 16px; font-weight: 700; color: #1a3c8f; margin-bottom: 2px; }
+    .te-title { font-size: 10px; color: #666; margin-bottom: 10px; }
+    .te-div { border-top: 1.5px solid #1a3c8f; margin-bottom: 8px; }
+    .te-sh { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #1a3c8f; margin-bottom: 6px; }
+    .te-ln { height: 6px; background: #e5e5e5; border-radius: 3px; margin-bottom: 5px; }
+    .te-ln.f{width:100%;} .te-ln.e{width:80%;} .te-ln.s{width:55%;}
 
-    /* CLASSIC */
-    .tpl-classic {
-      background: #fff; padding: 20px;
-      border-bottom: 3px solid #000;
-    }
-    .tc-name { font-weight: 800; font-size: 18px; letter-spacing: -0.3px; color: #000; text-align: center; margin-bottom: 3px; }
-    .tc-title { font-size: 11px; color: #555; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
-    .tc-divider { border-top: 1.5px solid #000; margin: 12px 0 10px; }
-    .tc-sh { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
-    .tc-line { height: 7px; background: #e5e5e5; border-radius: 3px; margin-bottom: 5px; }
-    .tc-line.f { width: 100%; } .tc-line.e { width: 80%; } .tc-line.s { width: 60%; }
+    .tpl-modern { background: #0d0f14; height: 100%; display: flex; flex-direction: column; }
+    .tm-hd { background: #0d0f14; padding: 16px; }
+    .tm-name { font-size: 15px; font-weight: 700; color: #fff; }
+    .tm-title { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+    .tm-bd { background: #fff; flex: 1; padding: 12px; }
+    .tm-sh { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #c8521a; margin: 8px 0 6px; }
+    .tm-ln { height: 6px; background: #f0ede8; border-radius: 3px; margin-bottom: 5px; }
+    .tm-ln.f{width:100%;} .tm-ln.e{width:80%;} .tm-ln.s{width:55%;}
 
-    /* EXECUTIVE */
-    .tpl-executive {
-      background: #fff; padding: 20px; border-left: 5px solid #1a3c8f;
-    }
-    .te-name { font-size: 18px; font-weight: 700; color: #1a3c8f; margin-bottom: 3px; }
-    .te-title { font-size: 11px; color: #666; margin-bottom: 12px; }
-    .te-divider { border-top: 1.5px solid #1a3c8f; margin-bottom: 10px; }
-    .te-sh { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #1a3c8f; margin-bottom: 7px; }
-    .te-line { height: 7px; background: #e5e5e5; border-radius: 3px; margin-bottom: 5px; }
-    .te-line.f { width: 100%; } .te-line.e { width: 80%; } .te-line.s { width: 55%; }
+    .tpl-minimal { background: #fafaf9; padding: 20px; height: 100%; }
+    .tmin-name { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 2px; }
+    .tmin-title { font-size: 10px; color: #888; margin-bottom: 12px; }
+    .tmin-sh { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #555; margin: 10px 0 6px; border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+    .tmin-ln { height: 6px; background: #e8e8e5; border-radius: 3px; margin-bottom: 5px; }
+    .tmin-ln.f{width:100%;} .tmin-ln.e{width:78%;} .tmin-ln.s{width:55%;}
 
-    /* MODERN */
-    .tpl-modern { background: #0d0f14; display: flex; flex-direction: column; }
-    .tm-header { background: #0d0f14; padding: 18px; }
-    .tm-name { font-size: 16px; font-weight: 700; color: #fff; }
-    .tm-title { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
-    .tm-body { background: #fff; flex: 1; padding: 14px; }
-    .tm-sh { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #c8521a; margin-bottom: 7px; margin-top: 10px; }
-    .tm-line { height: 6px; background: #f0ede8; border-radius: 3px; margin-bottom: 5px; }
-    .tm-line.f { width: 100%; } .tm-line.e { width: 80%; } .tm-line.s { width: 55%; }
-
-    /* MINIMAL */
-    .tpl-minimal { background: #fafaf9; padding: 22px; }
-    .tmin-name { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #000; margin-bottom: 2px; }
-    .tmin-title { font-size: 11px; color: #888; margin-bottom: 14px; }
-    .tmin-line { height: 6px; background: #e8e8e5; border-radius: 3px; margin-bottom: 5px; }
-    .tmin-line.f { width: 100%; } .tmin-line.e { width: 78%; } .tmin-line.s { width: 55%; }
-    .tmin-sh { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #333; margin: 12px 0 7px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
-
-    /* CREATIVE */
     .tpl-creative { display: flex; height: 100%; }
-    .tc-sidebar { width: 38%; background: #c8521a; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-    .tcs-circle { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.25); margin-bottom: 8px; }
-    .tcs-line { height: 6px; background: rgba(255,255,255,0.5); border-radius: 3px; }
-    .tcs-line.f { width: 100%; } .tcs-line.s { width: 70%; }
-    .tc-main { flex: 1; padding: 16px; background: #fff; }
-    .tcm-name { font-size: 13px; font-weight: 700; color: #000; margin-bottom: 2px; }
-    .tcm-title { font-size: 9px; color: #888; margin-bottom: 10px; }
-    .tcm-line { height: 6px; background: #f0ede8; border-radius: 3px; margin-bottom: 5px; }
-    .tcm-line.f { width: 100%; } .tcm-line.e { width: 80%; } .tcm-line.s { width: 55%; }
-    .tcm-sh { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #c8521a; margin: 10px 0 6px; }
+    .tcs { width: 38%; background: #c8521a; padding: 14px; display: flex; flex-direction: column; gap: 7px; }
+    .tcs-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.25); margin-bottom: 6px; }
+    .tcs-ln { height: 5px; background: rgba(255,255,255,0.5); border-radius: 3px; }
+    .tcs-ln.f{width:100%;} .tcs-ln.s{width:70%;}
+    .tcm { flex: 1; background: #fff; padding: 14px; }
+    .tcm-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+    .tcm-title { font-size: 9px; color: #888; margin-bottom: 8px; }
+    .tcm-sh { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #c8521a; margin: 8px 0 5px; }
+    .tcm-ln { height: 5px; background: #f0ede8; border-radius: 3px; margin-bottom: 4px; }
+    .tcm-ln.f{width:100%;} .tcm-ln.e{width:80%;} .tcm-ln.s{width:55%;}
 
     /* Card info */
-    .tpl-info {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-    }
+    .tpl-info { padding: 16px 18px; border-top: 1px solid var(--border); }
     .tpl-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-    .tpl-info p { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
-
-    .tpl-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tpl-info p { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    .tpl-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
     .tpl-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 10px; background: var(--cream); color: var(--muted); }
     .tpl-tag.green { background: #dcfce7; color: #166534; }
-
-    .choose-btn {
-      width: 100%;
-      padding: 10px;
-      background: var(--ink);
-      color: var(--paper);
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+    .choose-btn { width: 100%; padding: 10px; background: var(--ink); color: var(--paper); border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: 'DM Sans', sans-serif; }
     .choose-btn:hover { background: var(--accent); }
 
-    footer {
-      background: var(--ink); border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 24px 6%; display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
-    }
+    /* Footer */
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.08); padding: 24px 6%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
     .footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--paper); }
     .footer-logo span { color: var(--accent); }
     footer p { color: rgba(250,249,246,0.4); font-size: 13px; }
 
-    @media (max-width: 700px) {
-      .nav-links { display: none; position: absolute; top: 64px; right: 20px; background: var(--paper); flex-direction: column; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 220px; gap: 16px; z-index: 99; }
-      .nav-links.open { display: flex; }
-      .hamburger { display: block; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .templates-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 5%; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; align-items: center; justify-content: center; }
+
+      .page-hero { padding: 48px 5% 36px; }
+      .page-hero h1 { font-size: 26px; }
+      .page-hero p { font-size: 14px; }
+
+      .templates-wrapper { padding: 32px 4% 48px; }
+      .templates-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+
+      .tpl-preview { height: 160px; }
+      .tpl-info { padding: 12px 14px; }
+      .tpl-info h3 { font-size: 13px; }
+      .tpl-info p { font-size: 11px; margin-bottom: 10px; }
+      .tpl-tags { gap: 4px; }
+      .tpl-tag { font-size: 9px; padding: 2px 8px; }
+      .choose-btn { padding: 9px; font-size: 12px; }
+      .template-badge { font-size: 8px; padding: 3px 7px; top: 8px; right: 8px; }
+
+      footer { flex-direction: column; align-items: center; text-align: center; padding: 20px 5%; }
+    }
+
+    @media (max-width: 380px) {
+      .templates-grid { grid-template-columns: 1fr; }
+      .tpl-preview { height: 180px; }
     }
   </style>
 </head>
@@ -185,14 +155,22 @@
 
 <nav>
   <a href="index.html" class="logo">Lynx<span>perio</span></a>
-  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">&#9776;</button>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="builder.html">Builder</a></li>
     <li><a href="login.html">Login</a></li>
-    <li><a href="register.html"><span class="btn-primary" style="padding:8px 18px">Get Started</span></a></li>
+    <li><a href="register.html"><span class="btn-primary" style="padding:8px 18px;font-size:13px">Get Started</span></a></li>
   </ul>
 </nav>
+
+<div class="nav-overlay" id="navOverlay">
+  <button class="nav-close" id="navClose">&#x2715;</button>
+  <a href="index.html" onclick="closeNav()">Home</a>
+  <a href="builder.html" onclick="closeNav()">Builder</a>
+  <a href="login.html" onclick="closeNav()">Login</a>
+  <a href="register.html" onclick="closeNav()" style="background:var(--ink);color:var(--paper);padding:12px 28px;border-radius:8px;font-weight:700">Get Started</a>
+</div>
 
 <div class="page-hero">
   <div class="eyebrow">✦ ATS-Ready Templates</div>
@@ -205,137 +183,116 @@
 
     <!-- CLASSIC -->
     <div class="template-card" onclick="selectTemplate('classic')">
+      <span class="template-badge badge-ats">✓ ATS</span>
       <div class="tpl-preview">
-        <div class="tpl-classic" style="height:100%">
+        <div class="tpl-classic">
           <div class="tc-name">Alexandra Chen</div>
-          <div class="tc-title">Senior Product Designer · UX Lead</div>
-          <div class="tc-divider"></div>
+          <div class="tc-title">Senior Product Designer</div>
+          <div class="tc-div"></div>
           <div class="tc-sh">Professional Summary</div>
-          <div class="tc-line f"></div><div class="tc-line e"></div><div class="tc-line s"></div>
-          <div class="tc-sh" style="margin-top:10px">Experience</div>
-          <div class="tc-line f"></div><div class="tc-line e"></div>
+          <div class="tc-ln f"></div><div class="tc-ln e"></div><div class="tc-ln s"></div>
+          <div class="tc-sh" style="margin-top:8px">Experience</div>
+          <div class="tc-ln f"></div><div class="tc-ln e"></div>
         </div>
       </div>
       <div class="tpl-info">
         <h3>Classic</h3>
-        <p>Clean, traditional formatting trusted by hiring managers for decades.</p>
-        <div class="tpl-tags">
-          <span class="tpl-tag green">✓ ATS-Friendly</span>
-          <span class="tpl-tag">All Industries</span>
-          <span class="tpl-tag">B&W Print</span>
-        </div>
+        <p>Traditional formatting trusted by hiring managers for decades.</p>
+        <div class="tpl-tags"><span class="tpl-tag green">✓ ATS</span><span class="tpl-tag">All Industries</span></div>
         <button class="choose-btn">Use This Template →</button>
       </div>
     </div>
 
     <!-- EXECUTIVE -->
     <div class="template-card" onclick="selectTemplate('executive')">
+      <span class="template-badge badge-ats">✓ ATS</span>
       <div class="tpl-preview">
-        <div class="tpl-executive" style="height:100%">
+        <div class="tpl-executive">
           <div class="te-name">James Robertson</div>
           <div class="te-title">Chief Technology Officer</div>
-          <div class="te-divider"></div>
+          <div class="te-div"></div>
           <div class="te-sh">Summary</div>
-          <div class="te-line f"></div><div class="te-line e"></div>
-          <div class="te-sh" style="margin-top:10px">Experience</div>
-          <div class="te-line f"></div><div class="te-line e"></div><div class="te-line s"></div>
+          <div class="te-ln f"></div><div class="te-ln e"></div>
+          <div class="te-sh" style="margin-top:8px">Experience</div>
+          <div class="te-ln f"></div><div class="te-ln e"></div><div class="te-ln s"></div>
         </div>
       </div>
       <div class="tpl-info">
         <h3>Executive</h3>
-        <p>Bold navy accent, authoritative layout — perfect for senior leadership roles.</p>
-        <div class="tpl-tags">
-          <span class="tpl-tag green">✓ ATS-Friendly</span>
-          <span class="tpl-tag">Corporate</span>
-          <span class="tpl-tag">Management</span>
-        </div>
+        <p>Bold navy accent for senior and leadership roles.</p>
+        <div class="tpl-tags"><span class="tpl-tag green">✓ ATS</span><span class="tpl-tag">Corporate</span></div>
         <button class="choose-btn">Use This Template →</button>
       </div>
     </div>
 
     <!-- MODERN -->
     <div class="template-card" onclick="selectTemplate('modern')">
+      <span class="template-badge badge-ats">✓ ATS</span>
       <div class="tpl-preview">
-        <div class="tpl-modern" style="height:100%">
-          <div class="tm-header">
-            <div class="tm-name">Priya Sharma</div>
-            <div class="tm-title">Full-Stack Engineer · React · Node.js</div>
-          </div>
-          <div class="tm-body">
+        <div class="tpl-modern">
+          <div class="tm-hd"><div class="tm-name">Priya Sharma</div><div class="tm-title">Full-Stack Engineer · React · Node.js</div></div>
+          <div class="tm-bd">
             <div class="tm-sh">Summary</div>
-            <div class="tm-line f"></div><div class="tm-line e"></div>
+            <div class="tm-ln f"></div><div class="tm-ln e"></div>
             <div class="tm-sh">Experience</div>
-            <div class="tm-line f"></div><div class="tm-line e"></div><div class="tm-line s"></div>
+            <div class="tm-ln f"></div><div class="tm-ln e"></div><div class="tm-ln s"></div>
           </div>
         </div>
       </div>
       <div class="tpl-info">
         <h3>Modern</h3>
-        <p>Dark header, clean body — striking contrast for tech and startup roles.</p>
-        <div class="tpl-tags">
-          <span class="tpl-tag green">✓ ATS-Friendly</span>
-          <span class="tpl-tag">Tech</span>
-          <span class="tpl-tag">Startups</span>
-        </div>
+        <p>Dark header, clean body — perfect for tech and startups.</p>
+        <div class="tpl-tags"><span class="tpl-tag green">✓ ATS</span><span class="tpl-tag">Tech</span></div>
         <button class="choose-btn">Use This Template →</button>
       </div>
     </div>
 
     <!-- MINIMAL -->
     <div class="template-card" onclick="selectTemplate('minimal')">
+      <span class="template-badge badge-ats">✓ ATS</span>
       <div class="tpl-preview">
-        <div class="tpl-minimal" style="height:100%">
+        <div class="tpl-minimal">
           <div class="tmin-name">Sofia Andersson</div>
           <div class="tmin-title">UX Researcher & Strategist</div>
           <div class="tmin-sh">About</div>
-          <div class="tmin-line f"></div><div class="tmin-line e"></div>
+          <div class="tmin-ln f"></div><div class="tmin-ln e"></div>
           <div class="tmin-sh">Experience</div>
-          <div class="tmin-line f"></div><div class="tmin-line e"></div><div class="tmin-line s"></div>
+          <div class="tmin-ln f"></div><div class="tmin-ln e"></div><div class="tmin-ln s"></div>
         </div>
       </div>
       <div class="tpl-info">
         <h3>Minimal</h3>
-        <p>Ultra-clean typography with maximum whitespace. Timeless and elegant.</p>
-        <div class="tpl-tags">
-          <span class="tpl-tag green">✓ ATS-Friendly</span>
-          <span class="tpl-tag">Design</span>
-          <span class="tpl-tag">Academia</span>
-        </div>
+        <p>Ultra-clean typography with maximum whitespace. Timeless.</p>
+        <div class="tpl-tags"><span class="tpl-tag green">✓ ATS</span><span class="tpl-tag">Design</span></div>
         <button class="choose-btn">Use This Template →</button>
       </div>
     </div>
 
     <!-- CREATIVE -->
     <div class="template-card" onclick="selectTemplate('creative')">
+      <span class="template-badge badge-ats">✓ ATS</span>
       <div class="tpl-preview">
-        <div class="tpl-creative" style="height:100%">
-          <div class="tc-sidebar">
+        <div class="tpl-creative">
+          <div class="tcs">
             <div class="tcs-circle"></div>
-            <div class="tcs-line f"></div>
-            <div class="tcs-line s"></div>
-            <div style="height:8px"></div>
-            <div class="tcs-line f"></div>
-            <div class="tcs-line s"></div>
-            <div class="tcs-line f"></div>
+            <div class="tcs-ln f"></div><div class="tcs-ln s"></div>
+            <div style="height:6px"></div>
+            <div class="tcs-ln f"></div><div class="tcs-ln s"></div><div class="tcs-ln f"></div>
           </div>
-          <div class="tc-main">
+          <div class="tcm">
             <div class="tcm-name">Marcus Bell</div>
-            <div class="tcm-title">Brand Designer & Creative Dir.</div>
+            <div class="tcm-title">Brand Designer & Creative Director</div>
             <div class="tcm-sh">Experience</div>
-            <div class="tcm-line f"></div><div class="tcm-line e"></div>
+            <div class="tcm-ln f"></div><div class="tcm-ln e"></div>
             <div class="tcm-sh">Education</div>
-            <div class="tcm-line f"></div><div class="tcm-line s"></div>
+            <div class="tcm-ln f"></div><div class="tcm-ln s"></div>
           </div>
         </div>
       </div>
       <div class="tpl-info">
         <h3>Creative</h3>
-        <p>Two-column sidebar layout with bold color. Stand out in creative fields.</p>
-        <div class="tpl-tags">
-          <span class="tpl-tag green">✓ ATS-Friendly</span>
-          <span class="tpl-tag">Design</span>
-          <span class="tpl-tag">Marketing</span>
-        </div>
+        <p>Two-column sidebar with bold color for creative fields.</p>
+        <div class="tpl-tags"><span class="tpl-tag green">✓ ATS</span><span class="tpl-tag">Marketing</span></div>
         <button class="choose-btn">Use This Template →</button>
       </div>
     </div>
@@ -353,6 +310,15 @@
     localStorage.setItem('selectedTemplate', name);
     window.location.href = 'builder.html';
   }
+
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const navOverlay = document.getElementById('navOverlay');
+  const navClose = document.getElementById('navClose');
+  hamburgerBtn.addEventListener('click', () => navOverlay.classList.add('open'));
+  navClose.addEventListener('click', closeNav);
+  navOverlay.addEventListener('click', e => { if (e.target === navOverlay) closeNav(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+  function closeNav() { navOverlay.classList.remove('open'); }
 </script>
 </body>
 </html>
