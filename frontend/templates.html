@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Templates — Lynxperio Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0d0f14; --paper: #faf9f6; --cream: #f2efe8;
+      --accent: #c8521a; --accent-light: #f0e8e0;
+      --muted: #7a7670; --border: #e4e0d8;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 6%; background: rgba(250,249,246,0.95);
+      backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); text-decoration: none; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .btn-primary {
+      background: var(--ink); color: var(--paper);
+      padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer; transition: background 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .hamburger { display: none; font-size: 22px; cursor: pointer; background: none; border: none; color: var(--ink); }
+
+    /* HERO */
+    .page-hero {
+      padding: 72px 6% 56px;
+      text-align: center;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero .eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-light); color: var(--accent);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 18px;
+    }
+    .page-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(32px,4vw,50px); letter-spacing: -0.5px; margin-bottom: 12px; }
+    .page-hero p { color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+    /* GRID */
+    .templates-wrapper { max-width: 1200px; margin: 0 auto; padding: 64px 6%; }
+
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 32px;
+    }
+
+    .template-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      position: relative;
+    }
+    .template-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 16px 40px rgba(200,82,26,0.12);
+      transform: translateY(-6px);
+    }
+
+    .template-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--ink); color: var(--paper);
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .template-badge.ats { background: #166534; }
+
+    /* Template Previews */
+    .tpl-preview { height: 220px; position: relative; overflow: hidden; }
+
+    /* CLASSIC */
+    .tpl-classic {
+      background: #fff; padding: 20px;
+      border-bottom: 3px solid #000;
+    }
+    .tc-name { font-weight: 800; font-size: 18px; letter-spacing: -0.3px; color: #000; text-align: center; margin-bottom: 3px; }
+    .tc-title { font-size: 11px; color: #555; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+    .tc-divider { border-top: 1.5px solid #000; margin: 12px 0 10px; }
+    .tc-sh { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .tc-line { height: 7px; background: #e5e5e5; border-radius: 3px; margin-bottom: 5px; }
+    .tc-line.f { width: 100%; } .tc-line.e { width: 80%; } .tc-line.s { width: 60%; }
+
+    /* EXECUTIVE */
+    .tpl-executive {
+      background: #fff; padding: 20px; border-left: 5px solid #1a3c8f;
+    }
+    .te-name { font-size: 18px; font-weight: 700; color: #1a3c8f; margin-bottom: 3px; }
+    .te-title { font-size: 11px; color: #666; margin-bottom: 12px; }
+    .te-divider { border-top: 1.5px solid #1a3c8f; margin-bottom: 10px; }
+    .te-sh { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #1a3c8f; margin-bottom: 7px; }
+    .te-line { height: 7px; background: #e5e5e5; border-radius: 3px; margin-bottom: 5px; }
+    .te-line.f { width: 100%; } .te-line.e { width: 80%; } .te-line.s { width: 55%; }
+
+    /* MODERN */
+    .tpl-modern { background: #0d0f14; display: flex; flex-direction: column; }
+    .tm-header { background: #0d0f14; padding: 18px; }
+    .tm-name { font-size: 16px; font-weight: 700; color: #fff; }
+    .tm-title { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+    .tm-body { background: #fff; flex: 1; padding: 14px; }
+    .tm-sh { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #c8521a; margin-bottom: 7px; margin-top: 10px; }
+    .tm-line { height: 6px; background: #f0ede8; border-radius: 3px; margin-bottom: 5px; }
+    .tm-line.f { width: 100%; } .tm-line.e { width: 80%; } .tm-line.s { width: 55%; }
+
+    /* MINIMAL */
+    .tpl-minimal { background: #fafaf9; padding: 22px; }
+    .tmin-name { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #000; margin-bottom: 2px; }
+    .tmin-title { font-size: 11px; color: #888; margin-bottom: 14px; }
+    .tmin-line { height: 6px; background: #e8e8e5; border-radius: 3px; margin-bottom: 5px; }
+    .tmin-line.f { width: 100%; } .tmin-line.e { width: 78%; } .tmin-line.s { width: 55%; }
+    .tmin-sh { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #333; margin: 12px 0 7px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+
+    /* CREATIVE */
+    .tpl-creative { display: flex; height: 100%; }
+    .tc-sidebar { width: 38%; background: #c8521a; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .tcs-circle { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.25); margin-bottom: 8px; }
+    .tcs-line { height: 6px; background: rgba(255,255,255,0.5); border-radius: 3px; }
+    .tcs-line.f { width: 100%; } .tcs-line.s { width: 70%; }
+    .tc-main { flex: 1; padding: 16px; background: #fff; }
+    .tcm-name { font-size: 13px; font-weight: 700; color: #000; margin-bottom: 2px; }
+    .tcm-title { font-size: 9px; color: #888; margin-bottom: 10px; }
+    .tcm-line { height: 6px; background: #f0ede8; border-radius: 3px; margin-bottom: 5px; }
+    .tcm-line.f { width: 100%; } .tcm-line.e { width: 80%; } .tcm-line.s { width: 55%; }
+    .tcm-sh { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #c8521a; margin: 10px 0 6px; }
+
+    /* Card info */
+    .tpl-info {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .tpl-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .tpl-info p { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+
+    .tpl-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tpl-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 10px; background: var(--cream); color: var(--muted); }
+    .tpl-tag.green { background: #dcfce7; color: #166534; }
+
+    .choose-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .choose-btn:hover { background: var(--accent); }
+
+    footer {
+      background: var(--ink); border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 6%; display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--paper); }
+    .footer-logo span { color: var(--accent); }
+    footer p { color: rgba(250,249,246,0.4); font-size: 13px; }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; position: absolute; top: 64px; right: 20px; background: var(--paper); flex-direction: column; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 220px; gap: 16px; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Lynx<span>perio</span></a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="builder.html">Builder</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="register.html"><span class="btn-primary" style="padding:8px 18px">Get Started</span></a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">✦ ATS-Ready Templates</div>
+  <h1>Choose your template</h1>
+  <p>All templates are ATS-optimized, professionally designed, and free to use.</p>
+</div>
+
+<div class="templates-wrapper">
+  <div class="templates-grid">
+
+    <!-- CLASSIC -->
+    <div class="template-card" onclick="selectTemplate('classic')">
+      <div class="tpl-preview">
+        <div class="tpl-classic" style="height:100%">
+          <div class="tc-name">Alexandra Chen</div>
+          <div class="tc-title">Senior Product Designer · UX Lead</div>
+          <div class="tc-divider"></div>
+          <div class="tc-sh">Professional Summary</div>
+          <div class="tc-line f"></div><div class="tc-line e"></div><div class="tc-line s"></div>
+          <div class="tc-sh" style="margin-top:10px">Experience</div>
+          <div class="tc-line f"></div><div class="tc-line e"></div>
+        </div>
+      </div>
+      <div class="tpl-info">
+        <h3>Classic</h3>
+        <p>Clean, traditional formatting trusted by hiring managers for decades.</p>
+        <div class="tpl-tags">
+          <span class="tpl-tag green">✓ ATS-Friendly</span>
+          <span class="tpl-tag">All Industries</span>
+          <span class="tpl-tag">B&W Print</span>
+        </div>
+        <button class="choose-btn">Use This Template →</button>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE -->
+    <div class="template-card" onclick="selectTemplate('executive')">
+      <div class="tpl-preview">
+        <div class="tpl-executive" style="height:100%">
+          <div class="te-name">James Robertson</div>
+          <div class="te-title">Chief Technology Officer</div>
+          <div class="te-divider"></div>
+          <div class="te-sh">Summary</div>
+          <div class="te-line f"></div><div class="te-line e"></div>
+          <div class="te-sh" style="margin-top:10px">Experience</div>
+          <div class="te-line f"></div><div class="te-line e"></div><div class="te-line s"></div>
+        </div>
+      </div>
+      <div class="tpl-info">
+        <h3>Executive</h3>
+        <p>Bold navy accent, authoritative layout — perfect for senior leadership roles.</p>
+        <div class="tpl-tags">
+          <span class="tpl-tag green">✓ ATS-Friendly</span>
+          <span class="tpl-tag">Corporate</span>
+          <span class="tpl-tag">Management</span>
+        </div>
+        <button class="choose-btn">Use This Template →</button>
+      </div>
+    </div>
+
+    <!-- MODERN -->
+    <div class="template-card" onclick="selectTemplate('modern')">
+      <div class="tpl-preview">
+        <div class="tpl-modern" style="height:100%">
+          <div class="tm-header">
+            <div class="tm-name">Priya Sharma</div>
+            <div class="tm-title">Full-Stack Engineer · React · Node.js</div>
+          </div>
+          <div class="tm-body">
+            <div class="tm-sh">Summary</div>
+            <div class="tm-line f"></div><div class="tm-line e"></div>
+            <div class="tm-sh">Experience</div>
+            <div class="tm-line f"></div><div class="tm-line e"></div><div class="tm-line s"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tpl-info">
+        <h3>Modern</h3>
+        <p>Dark header, clean body — striking contrast for tech and startup roles.</p>
+        <div class="tpl-tags">
+          <span class="tpl-tag green">✓ ATS-Friendly</span>
+          <span class="tpl-tag">Tech</span>
+          <span class="tpl-tag">Startups</span>
+        </div>
+        <button class="choose-btn">Use This Template →</button>
+      </div>
+    </div>
+
+    <!-- MINIMAL -->
+    <div class="template-card" onclick="selectTemplate('minimal')">
+      <div class="tpl-preview">
+        <div class="tpl-minimal" style="height:100%">
+          <div class="tmin-name">Sofia Andersson</div>
+          <div class="tmin-title">UX Researcher & Strategist</div>
+          <div class="tmin-sh">About</div>
+          <div class="tmin-line f"></div><div class="tmin-line e"></div>
+          <div class="tmin-sh">Experience</div>
+          <div class="tmin-line f"></div><div class="tmin-line e"></div><div class="tmin-line s"></div>
+        </div>
+      </div>
+      <div class="tpl-info">
+        <h3>Minimal</h3>
+        <p>Ultra-clean typography with maximum whitespace. Timeless and elegant.</p>
+        <div class="tpl-tags">
+          <span class="tpl-tag green">✓ ATS-Friendly</span>
+          <span class="tpl-tag">Design</span>
+          <span class="tpl-tag">Academia</span>
+        </div>
+        <button class="choose-btn">Use This Template →</button>
+      </div>
+    </div>
+
+    <!-- CREATIVE -->
+    <div class="template-card" onclick="selectTemplate('creative')">
+      <div class="tpl-preview">
+        <div class="tpl-creative" style="height:100%">
+          <div class="tc-sidebar">
+            <div class="tcs-circle"></div>
+            <div class="tcs-line f"></div>
+            <div class="tcs-line s"></div>
+            <div style="height:8px"></div>
+            <div class="tcs-line f"></div>
+            <div class="tcs-line s"></div>
+            <div class="tcs-line f"></div>
+          </div>
+          <div class="tc-main">
+            <div class="tcm-name">Marcus Bell</div>
+            <div class="tcm-title">Brand Designer & Creative Dir.</div>
+            <div class="tcm-sh">Experience</div>
+            <div class="tcm-line f"></div><div class="tcm-line e"></div>
+            <div class="tcm-sh">Education</div>
+            <div class="tcm-line f"></div><div class="tcm-line s"></div>
+          </div>
+        </div>
+      </div>
+      <div class="tpl-info">
+        <h3>Creative</h3>
+        <p>Two-column sidebar layout with bold color. Stand out in creative fields.</p>
+        <div class="tpl-tags">
+          <span class="tpl-tag green">✓ ATS-Friendly</span>
+          <span class="tpl-tag">Design</span>
+          <span class="tpl-tag">Marketing</span>
+        </div>
+        <button class="choose-btn">Use This Template →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Lynx<span>perio</span></div>
+  <p>© 2026 Lynxperio · All templates are free</p>
+</footer>
+
+<script>
+  function selectTemplate(name) {
+    localStorage.setItem('selectedTemplate', name);
+    window.location.href = 'builder.html';
+  }
+</script>
+</body>
+</html>

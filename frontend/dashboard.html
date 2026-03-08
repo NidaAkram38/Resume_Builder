@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Lynxperio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0d0f14; --paper: #faf9f6; --cream: #f2efe8;
+      --accent: #c8521a; --accent-light: #f0e8e0;
+      --muted: #7a7670; --border: #e4e0d8;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 6%; background: var(--ink);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--paper); text-decoration: none; }
+    .logo span { color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-username { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .btn-logout {
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+      padding: 8px 16px; border-radius: 6px;
+      font-size: 13px; font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.12);
+      text-decoration: none; transition: background 0.2s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.14); }
+
+    .page {
+      max-width: 960px; margin: 0 auto; padding: 48px 24px;
+    }
+
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+    }
+    .page-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px; letter-spacing: -0.3px;
+    }
+    .page-header p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+    .btn-primary {
+      background: var(--ink); color: var(--paper);
+      padding: 12px 24px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      border: none; cursor: pointer; transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+    /* Quick actions */
+    .quick-actions {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 40px;
+    }
+    .action-card {
+      background: white; border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 24px 20px;
+      text-decoration: none; color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .action-card:hover { border-color: var(--accent); box-shadow: 0 8px 24px rgba(200,82,26,0.1); transform: translateY(-3px); }
+    .action-icon { font-size: 24px; margin-bottom: 12px; }
+    .action-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .action-card p { font-size: 12px; color: var(--muted); }
+
+    /* Resume list */
+    .section-title {
+      font-size: 14px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); margin-bottom: 16px;
+    }
+
+    .resumes-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .resume-card {
+      background: white; border: 1.5px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .resume-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); border-color: #ccc; }
+
+    .resume-thumb {
+      height: 130px; background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; color: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .resume-info { padding: 16px; }
+    .resume-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .resume-meta { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+
+    .resume-actions { display: flex; gap: 8px; }
+    .ra-btn {
+      flex: 1; padding: 8px;
+      border-radius: 6px; font-size: 12px; font-weight: 600;
+      border: 1.5px solid var(--border); background: none; cursor: pointer;
+      color: var(--ink); transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .ra-btn:hover { border-color: var(--ink); background: var(--cream); }
+    .ra-btn.danger { color: #dc2626; }
+    .ra-btn.danger:hover { border-color: #dc2626; background: #fef2f2; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 20px;
+      background: white; border: 1.5px dashed var(--border);
+      border-radius: 12px;
+    }
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Lynx<span>perio</span></a>
+  <div class="nav-right">
+    <span class="nav-username" id="nav-username">Loading...</span>
+    <a href="../backend/logout.php" class="btn-logout">Sign Out</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 id="welcome-text">Welcome back</h1>
+      <p>Manage your resumes or create a new one.</p>
+    </div>
+    <a href="builder.html" class="btn-primary">+ Create New Resume</a>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <a href="builder.html" class="action-card">
+      <div class="action-icon">✏️</div>
+      <h3>New Resume</h3>
+      <p>Start building from scratch</p>
+    </a>
+    <a href="templates.html" class="action-card">
+      <div class="action-icon">🎨</div>
+      <h3>Browse Templates</h3>
+      <p>5 ATS-friendly designs</p>
+    </a>
+    <a href="builder.html" class="action-card">
+      <div class="action-icon">⬇</div>
+      <h3>Download PDF</h3>
+      <p>Export your latest resume</p>
+    </a>
+  </div>
+
+  <!-- My Resumes -->
+  <div class="section-title">My Resumes</div>
+  <div class="resumes-grid" id="resumeGrid">
+    <div class="empty-state">
+      <div class="empty-icon">📄</div>
+      <h3>No resumes yet</h3>
+      <p>Create your first resume and it'll appear here.</p>
+      <a href="builder.html" class="btn-primary">Create Resume →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Load user info
+  async function loadDashboard() {
+    try {
+      const res = await fetch('../backend/get_resumes.php');
+      const data = await res.json();
+      if (!data.success) { window.location.href = 'login.html'; return; }
+
+      const name = data.user?.name || 'there';
+      document.getElementById('welcome-text').textContent = `Welcome back, ${name}`;
+      document.getElementById('nav-username').textContent = name;
+
+      if (data.resumes && data.resumes.length > 0) {
+        renderResumes(data.resumes);
+      }
+    } catch(e) {
+      // Offline mode — show dashboard without data
+      document.getElementById('nav-username').textContent = 'Guest';
+    }
+  }
+
+  function renderResumes(resumes) {
+    const grid = document.getElementById('resumeGrid');
+    grid.innerHTML = resumes.map(r => `
+      <div class="resume-card" id="card-${r.id}">
+        <div class="resume-thumb">📄</div>
+        <div class="resume-info">
+          <div class="resume-name">${escHtml(r.name || 'Untitled Resume')}</div>
+          <div class="resume-meta">Updated ${formatDate(r.updated_at)}</div>
+          <div class="resume-actions">
+            <button class="ra-btn" onclick="editResume(${r.id})">Edit</button>
+            <button class="ra-btn" onclick="downloadResume(${r.id})">PDF</button>
+            <button class="ra-btn danger" onclick="deleteResume(${r.id})">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function formatDate(d) {
+    if (!d) return 'recently';
+    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function editResume(id) { window.location.href = `builder.html?id=${id}`; }
+  function downloadResume(id) { window.open(`../backend/download_pdf.php?id=${id}`, '_blank'); }
+
+  async function deleteResume(id) {
+    if (!confirm('Delete this resume? This cannot be undone.')) return;
+    try {
+      const res = await fetch('../backend/delete_resume.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ id })
+      });
+      const data = await res.json();
+      if (data.success) document.getElementById('card-' + id)?.remove();
+    } catch {}
+  }
+
+  loadDashboard();
+</script>
+</body>
+</html>

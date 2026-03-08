@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lynxperio — Professional Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0d0f14;
+      --paper: #faf9f6;
+      --cream: #f2efe8;
+      --accent: #c8521a;
+      --accent-light: #f0e8e0;
+      --muted: #7a7670;
+      --border: #e4e0d8;
+      --blue: #1a3c8f;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6%;
+      background: rgba(250,249,246,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+    /* hamburger */
+    .hamburger { display: none; font-size: 22px; cursor: pointer; background: none; border: none; color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: 120px 6% 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%; right: -10%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(200,82,26,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-text { max-width: 560px; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before { content: '✦'; font-size: 10px; }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 5vw, 62px);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 22px;
+    }
+    .hero h1 em { color: var(--accent); font-style: italic; }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .hero-stats {
+      display: flex; gap: 32px; margin-top: 48px; padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); }
+    .stat-lbl { font-size: 12px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+
+    /* Resume preview mockup */
+    .hero-visual {
+      flex-shrink: 0;
+      width: 380px;
+      position: relative;
+    }
+
+    .resume-mockup {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      transform: rotate(2deg);
+      transition: transform 0.4s ease;
+    }
+    .resume-mockup:hover { transform: rotate(0deg) scale(1.02); }
+
+    .rm-header {
+      background: var(--ink);
+      padding: 24px;
+      color: white;
+    }
+    .rm-name { font-family: 'DM Serif Display', serif; font-size: 20px; }
+    .rm-title { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+
+    .rm-body { padding: 20px; }
+    .rm-section { margin-bottom: 16px; }
+    .rm-section-title {
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .rm-line { height: 7px; background: var(--cream); border-radius: 3px; margin-bottom: 5px; }
+    .rm-line.full { width: 100%; }
+    .rm-line.w80 { width: 80%; }
+    .rm-line.w60 { width: 60%; }
+    .rm-line.w45 { width: 45%; }
+    .rm-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .rm-tag { background: var(--accent-light); color: var(--accent); font-size: 9px; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+
+    /* Shadow card behind */
+    .resume-mockup-shadow {
+      position: absolute;
+      top: 10px; left: -16px;
+      width: 100%; height: 100%;
+      background: var(--cream);
+      border-radius: 12px;
+      z-index: -1;
+      transform: rotate(-2deg);
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 100px 6%;
+      background: var(--cream);
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 3.5vw, 42px);
+      text-align: center;
+      letter-spacing: -0.5px;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 28px;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .feature-card:hover {
+      box-shadow: 0 12px 32px rgba(0,0,0,0.07);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--ink);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      padding: 100px 6%;
+    }
+
+    .steps {
+      display: flex;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 32px; left: 10%; right: 10%;
+      height: 1px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      padding: 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-num {
+      width: 64px; height: 64px;
+      background: var(--paper);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--ink);
+      transition: all 0.3s;
+    }
+    .step:hover .step-num { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+    .step h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── TEMPLATES PREVIEW ── */
+    .templates-section {
+      padding: 100px 6%;
+      background: var(--cream);
+    }
+
+    .template-cards {
+      display: flex;
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .tpl-card {
+      flex-shrink: 0;
+      width: 200px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .tpl-card:hover { border-color: var(--accent); box-shadow: 0 6px 20px rgba(200,82,26,0.15); }
+
+    .tpl-thumb {
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 5px;
+    }
+    .tpl-bar { height: 6px; border-radius: 3px; background: var(--border); }
+    .tpl-bar.dark { background: var(--ink); }
+    .tpl-bar.accent { background: var(--accent); }
+    .tpl-bar.w70 { width: 70%; }
+    .tpl-bar.w50 { width: 50%; }
+    .tpl-bar.w85 { width: 85%; }
+
+    .tpl-name {
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-top: 1px solid var(--border);
+      background: var(--paper);
+    }
+
+    .templates-cta { text-align: center; }
+
+    /* ── FAQ ── */
+    .faq { padding: 100px 6%; }
+    .faq-list { max-width: 700px; margin: 0 auto; }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 22px 0;
+      cursor: pointer;
+    }
+
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px; font-weight: 600;
+      user-select: none;
+    }
+    .faq-q .chevron {
+      font-size: 18px; color: var(--muted);
+      transition: transform 0.3s;
+    }
+    .faq-item.open .chevron { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.3s;
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 12px; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 80px 6%;
+      background: var(--ink);
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      color: var(--paper);
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+    .cta-section p { color: rgba(250,249,246,0.6); margin-bottom: 32px; font-size: 16px; }
+    .cta-section .btn-primary { background: var(--accent); font-size: 15px; padding: 14px 32px; }
+    .cta-section .btn-primary:hover { background: #b84616; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 28px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--paper); }
+    .footer-logo span { color: var(--accent); }
+    footer p { color: rgba(250,249,246,0.4); font-size: 13px; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: rgba(250,249,246,0.5); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--paper); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; padding-top: 100px; }
+      .hero-visual { width: 100%; max-width: 380px; }
+      .hero-stats { flex-wrap: wrap; gap: 20px; }
+      .steps { flex-direction: column; align-items: center; gap: 32px; }
+      .steps::before { display: none; }
+      .step { max-width: 280px; }
+    }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; position: absolute; top: 70px; right: 20px; background: var(--paper); flex-direction: column; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 220px; gap: 16px; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: block; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-text { animation: fadeUp 0.8s ease forwards; }
+    .hero-visual { animation: fadeUp 0.8s 0.2s ease both; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">Lynx<span>perio</span></a>
+
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+
+  <ul class="nav-links">
+    <li><a href="templates.html">Templates</a></li>
+    <li><a href="builder.html">Builder</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="register.html"><span class="btn-primary" style="padding:8px 18px">Get Started</span></a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">ATS-Optimized Templates</div>
+    <h1>Build a resume that<br><em>actually gets hired</em></h1>
+    <p>Create polished, ATS-friendly resumes in minutes. Choose from professionally crafted templates and download instantly — completely free.</p>
+    <div class="hero-actions">
+      <a href="builder.html" class="btn-primary">Start Building →</a>
+      <a href="templates.html" class="btn-outline">View Templates</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">5+</span><span class="stat-lbl">Templates</span></div>
+      <div class="stat-item"><span class="stat-num">100%</span><span class="stat-lbl">Free Forever</span></div>
+      <div class="stat-item"><span class="stat-num">ATS</span><span class="stat-lbl">Optimized</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="resume-mockup-shadow"></div>
+    <div class="resume-mockup">
+      <div class="rm-header">
+        <div class="rm-name">Alexandra Chen</div>
+        <div class="rm-title">Senior Product Designer</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-section">
+          <div class="rm-section-title">Professional Summary</div>
+          <div class="rm-line full"></div>
+          <div class="rm-line w80"></div>
+          <div class="rm-line w60"></div>
+        </div>
+        <div class="rm-section">
+          <div class="rm-section-title">Experience</div>
+          <div class="rm-line w80"></div>
+          <div class="rm-line full"></div>
+          <div class="rm-line w60"></div>
+          <div class="rm-line w45"></div>
+        </div>
+        <div class="rm-section">
+          <div class="rm-section-title">Skills</div>
+          <div class="rm-tags">
+            <div class="rm-tag">Figma</div>
+            <div class="rm-tag">UX Research</div>
+            <div class="rm-tag">Prototyping</div>
+            <div class="rm-tag">Agile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-label">Why Lynxperio</div>
+  <h2 class="section-title">Everything you need to land<br>your next role</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Live Preview</h3>
+      <p>See your resume update in real-time as you type. No surprises when you download.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>ATS-Optimized</h3>
+      <p>All templates are built to pass Applicant Tracking Systems used by 99% of employers.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>PDF Download</h3>
+      <p>Export a pixel-perfect A4 PDF instantly. Print-ready, crisp, and professionally formatted.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>5 Templates</h3>
+      <p>From minimal to bold — choose the style that fits your industry and personality.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <h3>Save & Edit</h3>
+      <p>Create an account to save multiple resumes and edit them anytime from any device.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🆓</div>
+      <h3>Always Free</h3>
+      <p>No hidden charges, no watermarks, no paywalls. Build unlimited resumes at zero cost.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="section-label">Process</div>
+  <h2 class="section-title">Ready in three steps</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Pick a Template</h3>
+      <p>Browse our ATS-friendly designs and choose the one that fits your style.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Fill Your Details</h3>
+      <p>Enter your information and watch your resume build live in the preview.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Download PDF</h3>
+      <p>Export a print-ready PDF and start sending applications today.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPLATES SECTION -->
+<section class="templates-section">
+  <div class="section-label">Templates</div>
+  <h2 class="section-title">Designed for every profession</h2>
+  <div class="template-cards">
+    <!-- Classic -->
+    <div class="tpl-card" onclick="location.href='templates.html'">
+      <div class="tpl-thumb" style="background:#fff; border-bottom: 3px solid #000;">
+        <div class="tpl-bar dark w70"></div>
+        <div class="tpl-bar" style="background:#555; width:45%"></div>
+        <div style="height:8px;border-top:1px solid #000;margin:6px 0"></div>
+        <div class="tpl-bar w85"></div><div class="tpl-bar w70"></div><div class="tpl-bar w50"></div>
+      </div>
+      <div class="tpl-name">Classic</div>
+    </div>
+    <!-- Executive -->
+    <div class="tpl-card" onclick="location.href='templates.html'">
+      <div class="tpl-thumb" style="background:#fff; border-left: 4px solid #1a3c8f; padding-left: 12px;">
+        <div class="tpl-bar" style="background:#1a3c8f; width:65%"></div>
+        <div class="tpl-bar w50"></div>
+        <div class="tpl-bar" style="height:1px; background:#1a3c8f; width:100%; margin:6px 0"></div>
+        <div class="tpl-bar w85"></div><div class="tpl-bar w70"></div>
+      </div>
+      <div class="tpl-name">Executive</div>
+    </div>
+    <!-- Modern -->
+    <div class="tpl-card" onclick="location.href='templates.html'">
+      <div class="tpl-thumb" style="background: linear-gradient(135deg,#0d0f14 40%, #fff 40%); padding:0;">
+        <div style="background:#0d0f14;padding:12px;height:56px;">
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.9); width:60%"></div>
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.4); width:40%; margin-top:5px"></div>
+        </div>
+        <div style="padding:10px;">
+          <div class="tpl-bar w85"></div><div class="tpl-bar w70"></div><div class="tpl-bar w50"></div>
+        </div>
+      </div>
+      <div class="tpl-name">Modern</div>
+    </div>
+    <!-- Minimal -->
+    <div class="tpl-card" onclick="location.href='templates.html'">
+      <div class="tpl-thumb" style="background:#fafaf9;">
+        <div class="tpl-bar dark w60" style="height:10px; margin-bottom:4px"></div>
+        <div class="tpl-bar w45" style="background:#999"></div>
+        <div style="margin-top:10px;"></div>
+        <div class="tpl-bar w85"></div><div class="tpl-bar w70"></div><div class="tpl-bar w55"></div>
+      </div>
+      <div class="tpl-name">Minimal</div>
+    </div>
+    <!-- Creative -->
+    <div class="tpl-card" onclick="location.href='templates.html'">
+      <div class="tpl-thumb" style="background:#c8521a; padding:12px; flex-direction:row; align-items:flex-start; gap:8px;">
+        <div style="width:28%;background:rgba(0,0,0,0.25);border-radius:4px;height:100%;padding:6px;">
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.6); width:100%"></div>
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.4); width:80%; margin-top:4px"></div>
+        </div>
+        <div style="flex:1">
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.9); width:80%"></div>
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.6); width:60%; margin-top:5px"></div>
+          <div class="tpl-bar" style="background:rgba(255,255,255,0.4); width:90%; margin-top:5px"></div>
+        </div>
+      </div>
+      <div class="tpl-name">Creative</div>
+    </div>
+  </div>
+  <div class="templates-cta">
+    <a href="templates.html" class="btn-primary">Browse All Templates →</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">Common questions</h2>
+  <div class="faq-list">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Is Lynxperio really free? <span class="chevron">⌄</span></div>
+      <div class="faq-a">Yes, 100% free. No credit card, no subscription, no watermarks. Build and download as many resumes as you want.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Are the templates really ATS-friendly? <span class="chevron">⌄</span></div>
+      <div class="faq-a">Absolutely. All templates use clean HTML structure with proper heading hierarchy and plain text — exactly what ATS parsers need to read your resume correctly.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do I need to create an account? <span class="chevron">⌄</span></div>
+      <div class="faq-a">No account needed to build or download. Register only if you want to save your resumes and access them later from any device.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I switch templates after filling in my details? <span class="chevron">⌄</span></div>
+      <div class="faq-a">Yes — the builder lets you switch templates and your content carries over instantly. Preview all styles before downloading.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What format is the download? <span class="chevron">⌄</span></div>
+      <div class="faq-a">You can download your resume as a high-quality A4 PDF, ready to send to employers or print.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Your next job starts here</h2>
+  <p>Join thousands who've built standout resumes with Lynxperio</p>
+  <a href="builder.html" class="btn-primary">Build My Resume — It's Free</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Lynx<span>perio</span></div>
+  <p>© 2026 Lynxperio · Built for job seekers</p>
+  <div class="footer-links">
+    <a href="templates.html">Templates</a>
+    <a href="builder.html">Builder</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+  </div>
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
