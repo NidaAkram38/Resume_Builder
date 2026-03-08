@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Account — Lynxperio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0d0f14" />
+  <title>Register — Lynxperio</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -12,199 +13,232 @@
       --muted: #7a7670; --border: #e4e0d8;
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh; display: flex;
-      background: var(--ink);
-      color: var(--ink);
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; }
 
+    /* LEFT PANEL */
     .left-panel {
-      flex: 1; background: var(--ink);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: flex-start;
-      padding: 64px 72px; position: relative; overflow: hidden;
+      width: 42%; background: var(--ink); color: var(--paper);
+      padding: 60px 52px; display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
     }
     .left-panel::before {
-      content: ''; position: absolute; top: -100px; right: -100px;
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(200,82,26,0.12) 0%, transparent 65%);
+      content: ''; position: absolute; top: -80px; right: -80px;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(200,82,26,0.15) 0%, transparent 65%);
     }
+    .panel-logo { font-family: 'DM Serif Display', serif; font-size: 22px; }
+    .panel-logo span { color: var(--accent); }
+    .panel-content { position: relative; z-index: 1; }
+    .panel-content h2 { font-family: 'DM Serif Display', serif; font-size: 34px; line-height: 1.2; margin-bottom: 28px; }
+    .panel-content h2 em { color: var(--accent); font-style: italic; }
+    .feature-list { display: flex; flex-direction: column; gap: 14px; }
+    .feature-item { display: flex; align-items: flex-start; gap: 12px; }
+    .feature-icon { width: 28px; height: 28px; background: rgba(200,82,26,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
+    .feature-item h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .feature-item p { font-size: 12px; color: rgba(250,249,246,0.5); line-height: 1.4; }
+    .panel-footer { font-size: 12px; color: rgba(250,249,246,0.3); }
 
-    .left-logo {
-      font-family: 'DM Serif Display', serif; font-size: 28px;
-      color: var(--paper); text-decoration: none; margin-bottom: 64px; display: block;
-    }
-    .left-logo span { color: var(--accent); }
-
-    .left-tagline {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(26px, 2.8vw, 40px);
-      color: var(--paper); line-height: 1.2; letter-spacing: -0.4px; margin-bottom: 16px;
-    }
-    .left-tagline em { color: var(--accent); font-style: italic; }
-    .left-sub { font-size: 15px; color: rgba(250,249,246,0.5); line-height: 1.6; max-width: 360px; }
-
-    .features-list { margin-top: 40px; display: flex; flex-direction: column; gap: 14px; }
-    .feat-item { display: flex; align-items: flex-start; gap: 12px; }
-    .feat-icon { font-size: 16px; margin-top: 1px; }
-    .feat-text { font-size: 13px; color: rgba(250,249,246,0.6); line-height: 1.5; }
-    .feat-text strong { color: rgba(250,249,246,0.9); }
-
+    /* RIGHT PANEL */
     .right-panel {
-      width: 520px; flex-shrink: 0; background: var(--paper);
+      flex: 1; padding: 56px 52px;
       display: flex; align-items: center; justify-content: center;
-      padding: 48px 56px;
+      overflow-y: auto;
     }
-    .form-box { width: 100%; max-width: 380px; }
-
-    .form-box h2 { font-family: 'DM Serif Display', serif; font-size: 30px; letter-spacing: -0.3px; margin-bottom: 6px; }
-    .form-box .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .form-box { width: 100%; max-width: 400px; }
+    .form-box h2 { font-family: 'DM Serif Display', serif; font-size: 30px; margin-bottom: 6px; }
+    .form-box .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
     .form-box .subtitle a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
-    .form-group { margin-bottom: 16px; }
+    .form-group { margin-bottom: 18px; position: relative; }
     .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 7px; }
     .form-group input {
-      width: 100%; padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px; font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      background: white; color: var(--ink);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 16px; /* 16px prevents iOS auto-zoom */
+      font-family: 'DM Sans', sans-serif; color: var(--ink);
+      background: #fff; transition: border-color 0.2s, box-shadow 0.2s;
     }
     .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,82,26,0.1); }
+    .form-group input.valid { border-color: #16a34a; }
+    .form-group input.error { border-color: #dc2626; }
+    .toggle-pw { position: absolute; right: 14px; bottom: 13px; background: none; border: none; cursor: pointer; font-size: 16px; color: var(--muted); }
 
-    .pw-wrap { position: relative; }
-    .pw-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; user-select: none; color: var(--muted); }
+    .strength-bar { height: 4px; border-radius: 2px; background: var(--border); margin-top: 6px; overflow: hidden; }
+    .strength-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; width: 0%; }
 
-    .btn-submit {
-      width: 100%; padding: 13px;
-      background: var(--ink); color: var(--paper);
-      border: none; border-radius: 8px;
-      font-size: 14px; font-weight: 600;
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s, transform 0.15s;
-      margin-top: 6px; margin-bottom: 16px;
-    }
-    .btn-submit:hover { background: var(--accent); transform: translateY(-1px); }
-
-    .terms { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.5; }
+    .terms { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
     .terms a { color: var(--accent); text-decoration: none; }
 
-    .msg { font-size: 13px; color: #dc2626; margin-bottom: 12px; min-height: 20px; }
-    .msg.success { color: #166534; }
+    .btn-submit {
+      width: 100%; padding: 14px; background: var(--ink); color: white;
+      border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background 0.2s, transform 0.15s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-submit:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-submit:active { transform: none; }
 
+    .error-msg { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .error-msg.show { display: block; }
+    .success-msg { background: #f0fdf4; border: 1px solid #86efac; color: #16a34a; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .success-msg.show { display: block; }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .left-panel { display: none; }
-      .right-panel { width: 100%; padding: 40px 24px; }
+      .right-panel { width: 100%; padding: 48px 32px; }
+    }
+
+    @media (max-width: 480px) {
+      body { align-items: stretch; }
+      .right-panel { padding: 40px 24px 48px; align-items: flex-start; padding-top: 56px; }
+      .form-box { max-width: 100%; }
+      .form-box h2 { font-size: 26px; }
+      .form-box .subtitle { font-size: 13px; margin-bottom: 24px; }
+      .form-group input { padding: 13px 14px; }
+      .btn-submit { padding: 15px; font-size: 15px; }
+      .terms { font-size: 11px; }
+    }
+
+    @media (max-width: 360px) {
+      .right-panel { padding: 36px 18px 40px; }
     }
   </style>
 </head>
 <body>
 
+<!-- LEFT PANEL -->
 <div class="left-panel">
-  <a href="index.html" class="left-logo">Lynx<span>perio</span></a>
-  <h2 class="left-tagline">Start building<br><em>for free.</em></h2>
-  <p class="left-sub">Create an account to save your resumes and access them from any device, any time.</p>
-  <div class="features-list">
-    <div class="feat-item">
-      <span class="feat-icon">💾</span>
-      <div class="feat-text"><strong>Save multiple resumes</strong> — one for each role or industry</div>
-    </div>
-    <div class="feat-item">
-      <span class="feat-icon">🎨</span>
-      <div class="feat-text"><strong>5 ATS-friendly templates</strong> — switch anytime, content stays</div>
-    </div>
-    <div class="feat-item">
-      <span class="feat-icon">⬇</span>
-      <div class="feat-text"><strong>Unlimited PDF downloads</strong> — no watermarks, ever</div>
-    </div>
-    <div class="feat-item">
-      <span class="feat-icon">🆓</span>
-      <div class="feat-text"><strong>Always free</strong> — no credit card needed</div>
+  <div class="panel-logo">Lynx<span>perio</span></div>
+  <div class="panel-content">
+    <h2>Build your<br><em>career story</em></h2>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">🎨</div>
+        <div><h4>5 Pro Templates</h4><p>ATS-optimized designs for every industry</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💾</div>
+        <div><h4>Save & Edit Anytime</h4><p>Your resumes are always there when you need them</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📄</div>
+        <div><h4>PDF Download</h4><p>Print-ready A4 PDF in one click</p></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🆓</div>
+        <div><h4>100% Free</h4><p>No credit card, no hidden fees, ever</p></div>
+      </div>
     </div>
   </div>
+  <div class="panel-footer">© 2026 Lynxperio · Built for job seekers</div>
 </div>
 
+<!-- RIGHT PANEL -->
 <div class="right-panel">
   <div class="form-box">
     <h2>Create account</h2>
     <p class="subtitle">Already have one? <a href="login.html">Sign in →</a></p>
 
-    <p class="msg" id="msg"></p>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg">Account created! Redirecting…</div>
 
-    <form id="registerForm">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="Alexandra Chen" required>
-      </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="you@email.com" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <div class="pw-wrap">
-          <input type="password" id="password" placeholder="Min. 8 characters" required minlength="8">
-          <span class="pw-toggle" onclick="togglePw('password', this)">👁</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Confirm Password</label>
-        <div class="pw-wrap">
-          <input type="password" id="confirmPassword" placeholder="Repeat password" required>
-          <span class="pw-toggle" onclick="togglePw('confirmPassword', this)">👁</span>
-        </div>
-      </div>
-      <button type="submit" class="btn-submit">Create Account →</button>
-    </form>
-    <p class="terms">By creating an account you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input id="name" type="text" placeholder="Your full name" autocomplete="name">
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <input id="email" type="email" placeholder="you@email.com" autocomplete="email">
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input id="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkStrength(this.value)">
+      <button class="toggle-pw" type="button" onclick="togglePassword('password', this)" aria-label="Show password">👁</button>
+      <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input id="confirm" type="password" placeholder="Repeat password" autocomplete="new-password">
+      <button class="toggle-pw" type="button" onclick="togglePassword('confirm', this)" aria-label="Show password">👁</button>
+    </div>
+
+    <p class="terms">By registering you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+
+    <button class="btn-submit" onclick="handleRegister()">Create Account →</button>
   </div>
 </div>
 
 <script>
-  function togglePw(id, el) {
-    const f = document.getElementById(id);
-    if (f.type === 'password') { f.type = 'text'; el.textContent = '🙈'; }
-    else { f.type = 'password'; el.textContent = '👁'; }
+  function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const hidden = input.type === 'password';
+    input.type = hidden ? 'text' : 'password';
+    btn.textContent = hidden ? '🙈' : '👁';
   }
 
-  document.getElementById('registerForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const msg = document.getElementById('msg');
-    msg.className = 'msg'; msg.textContent = '';
-    const btn = this.querySelector('button[type=submit]');
+  function checkStrength(pw) {
+    const fill = document.getElementById('strengthFill');
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const colors = ['#dc2626','#f97316','#facc15','#16a34a'];
+    fill.style.width = (score * 25) + '%';
+    fill.style.background = colors[score - 1] || 'transparent';
+  }
 
-    const pw = document.getElementById('password').value;
-    const cpw = document.getElementById('confirmPassword').value;
-    if (pw !== cpw) { msg.textContent = 'Passwords do not match.'; return; }
+  function handleRegister() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm').value;
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    errorMsg.classList.remove('show'); successMsg.classList.remove('show');
 
-    btn.textContent = 'Creating account...'; btn.disabled = true;
+    if (!name || !email || !password || !confirm) {
+      errorMsg.textContent = 'Please fill in all fields.';
+      errorMsg.classList.add('show'); return;
+    }
+    if (password.length < 8) {
+      errorMsg.textContent = 'Password must be at least 8 characters.';
+      errorMsg.classList.add('show'); return;
+    }
+    if (password !== confirm) {
+      errorMsg.textContent = 'Passwords do not match.';
+      errorMsg.classList.add('show'); return;
+    }
 
-    try {
-      const res = await fetch('../backend/register.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          name: document.getElementById('name').value,
-          email: document.getElementById('email').value,
-          password: pw
-        })
-      });
-      const data = await res.json();
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Creating account…'; btn.disabled = true;
+
+    fetch('../backend/register.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    })
+    .then(r => r.json())
+    .then(data => {
       if (data.success) {
-        msg.className = 'msg success';
-        msg.textContent = 'Account created! Redirecting...';
-        setTimeout(() => window.location.href = 'login.html', 1500);
+        successMsg.classList.add('show');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
       } else {
-        msg.textContent = data.message || 'Registration failed.';
+        errorMsg.textContent = data.message || 'Registration failed. Please try again.';
+        errorMsg.classList.add('show');
         btn.textContent = 'Create Account →'; btn.disabled = false;
       }
-    } catch {
-      msg.textContent = 'Connection error.';
+    })
+    .catch(() => {
+      errorMsg.textContent = 'Connection error. Please try again.';
+      errorMsg.classList.add('show');
       btn.textContent = 'Create Account →'; btn.disabled = false;
-    }
-  });
+    });
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); });
 </script>
 </body>
 </html>
