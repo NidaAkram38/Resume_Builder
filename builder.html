@@ -652,40 +652,42 @@
 
     const wrapper = document.getElementById('resume-wrapper');
 
-    // Step 1: Clone the resume element — so we never touch the live preview
-    const clone = wrapper.cloneNode(true);
-    clone.style.transform = 'none';
-    clone.style.marginBottom = '0';
-    clone.style.transformOrigin = 'top left';
-    clone.style.width = '210mm';
-    clone.style.position = 'fixed';
-    clone.style.top = '-9999px';
-    clone.style.left = '-9999px';
-    clone.style.zIndex = '-1';
-    document.body.appendChild(clone);
+    // Put clone inside an absolute-positioned container (not fixed)
+    // so html2canvas can measure it correctly
+    const container = document.createElement('div');
+    container.style.cssText = 'position:absolute;left:-9999px;top:0;width:794px;overflow:visible;background:white;';
+    document.body.appendChild(container);
 
-    // Step 2: Generate PDF from the hidden clone
-    html2pdf()
-      .set({
-        margin: 0,
-        filename: name.replace(/\s+/g, '_') + '_Resume.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: 794
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      })
-      .from(clone)
-      .save()
-      .then(() => {
-        document.body.removeChild(clone);
-        btn.textContent = '⬇ PDF';
-        btn.disabled = false;
-      });
+    const clone = wrapper.cloneNode(true);
+    clone.style.cssText = 'width:794px;transform:none;margin:0;padding:0;box-shadow:none;border-radius:0;';
+    container.appendChild(clone);
+
+    // 300ms delay so fonts and layout fully render
+    setTimeout(() => {
+      html2pdf()
+        .set({
+          margin: 0,
+          filename: name.replace(/\s+/g, '_') + '_Resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            logging: false,
+            width: 794,
+            windowWidth: 794
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        })
+        .from(clone)
+        .save()
+        .then(() => {
+          document.body.removeChild(container);
+          btn.textContent = '⬇ PDF';
+          btn.disabled = false;
+        });
+    }, 300);
   }
 
   // ── Init ──
